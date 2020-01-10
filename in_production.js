@@ -1,9 +1,6 @@
-/** FrontEnd-API
+/** in_production.js
  * 
- * API для работы с front-end частью сайта, когда невозможно 
- * вмешаться в исходный код страницы со стороны сервера.
- * Встраивается в статичные блоки страницы, через админку.
- * Тестировалось на интернет-магазине на движке Advantshop (7, 8 версий)
+ * скрипт работающий на https://магазин-валенок.рф/
  * 
  * @author Buturlin Vitaliy (Byurrer), email: byurrer@mail.ru
  * @copyright 2020 Buturlin Vitaliy
@@ -12,10 +9,10 @@
 
 //##########################################################################
 
-var api = api || {};
+var fgc = fgc || {};
 
 //! текущее количествосовершенных итераций
-api.iCurrIteration = 0;
+fgc.iCurrIteration = 0;
 
 /*! массив функций-обработчиков
 каждый элемент является объектом с ключами:
@@ -23,35 +20,35 @@ fn - функция
 style - строка со стилями для поиска на странице, необязательно
 completed - закончила ли функция свою работу, автоустановка false
 */
-api.aFn = [];
+fgc.aFn = [];
 
 //! период вызова таймера в млсек
-api.iTimerPeriod = 1000;
+fgc.iTimerPeriod = 1000;
 
 //! максимальное количество итераций
-api.iMaxIteration = 10;
+fgc.iMaxIteration = 10;
 
 
-//! добавление функции-обработчика в массив api.aFn
-api.addFn = function(fnFunc, sStyle=null)
+//! добавление функции-обработчика в массив fgc.aFn
+fgc.addFn = function(fnFunc, sStyle=null)
 {
-	api.aFn.push({fn: fnFunc, style: sStyle, completed: false});
+	fgc.aFn.push({fn: fnFunc, style: sStyle, completed: false});
 }
 
 //! запуск обработчиков
-api.run = function()
+fgc.run = function()
 {
-	api.idTimer = setTimeout(api.callFn, api.iTimerPeriod);
+	fgc.idTimer = setTimeout(fgc.callFn, fgc.iTimerPeriod);
 }
 
 
 //! вызов обработчиков
-api.callFn = function()
+fgc.callFn = function()
 {
 	var iCountCompleted = 0;
-	for(var i=0, il=api.aFn.length; i<il; ++i)
+	for(var i=0, il=fgc.aFn.length; i<il; ++i)
   {
-		var aData = api.aFn[i];
+		var aData = fgc.aFn[i];
 		if(!aData.completed)
 			aData.completed = aData.fn(aData.style);
 		else
@@ -59,12 +56,12 @@ api.callFn = function()
 	}
 	
 	// если было совершено 10 или более итарций или все функции закончили свою работу, тогда удаляем таймер, иначе взводим
-	if(api.iCurrIteration >= api.iMaxIteration || iCountCompleted == api.aFn.length)
-		clearTimeout(api.idTimer);
+	if(fgc.iCurrIteration >= fgc.iMaxIteration || iCountCompleted == fgc.aFn.length)
+		clearTimeout(fgc.idTimer);
 	else
-		api.idTimer = setTimeout(api.callFn , api.iTimerPeriod);
+		fgc.idTimer = setTimeout(fgc.callFn , fgc.iTimerPeriod);
 
-	++api.iCurrIteration;
+	++fgc.iCurrIteration;
 }
 
 //##########################################################################
@@ -309,14 +306,14 @@ function FirstShipping()
 //##########################################################################
 
 // установка обработчиков
-api.addFn(DiffSole);
-api.addFn(InsertCatGender);
-api.addFn(DiscountRounding, "products-view-label-inner products-view-label-discount");
-api.addFn(DiscountRounding, "price-discount-percent");
-api.addFn(InsertText4DiffDown);
-api.addFn(SelectOPT);
-//api.addFn(FreeShipping);
-api.addFn(FirstShipping);
+fgc.addFn(DiffSole);
+fgc.addFn(InsertCatGender);
+fgc.addFn(DiscountRounding, "products-view-label-inner products-view-label-discount");
+fgc.addFn(DiscountRounding, "price-discount-percent");
+fgc.addFn(InsertText4DiffDown);
+fgc.addFn(SelectOPT);
+//fgc.addFn(FreeShipping);
+fgc.addFn(FirstShipping);
 
 // запуск обработчиков
-api.run();
+fgc.run();
