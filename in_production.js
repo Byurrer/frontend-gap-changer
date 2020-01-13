@@ -87,6 +87,9 @@ function DiffSole()
 
 		//дивы с размерами
 		var aSizes = aBlockSizes[0].getElementsByClassName("sizes-viewer-block");
+
+		if(aSizes.length <= 0)
+      return false;
 		
 		var iCountDown = 0;
 		var iLastCom = 1;
